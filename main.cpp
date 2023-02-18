@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <math.h>
 #include <queue>
+#include <deque>
 using namespace std;
 
 class BST
@@ -15,6 +16,7 @@ private:
 		Node* parent;
 	};
 	Node* root;
+
 	Node* FindNodePrivate(int key)
 	{
 		Node* curr = root;
@@ -64,7 +66,6 @@ private:
 			delete t;
 		}
 	}
-
 
 public:
 	BST()
@@ -124,8 +125,8 @@ public:
 				}
 				else
 				{
-					//throw new runtime_error("This element has already added in the Tree!");
 					cout << "This element [" << t->key << "] has already added in the Tree!\n";
+					delete t;
 					break;
 				}
 			}
@@ -214,16 +215,6 @@ public:
 		//Node with single child
 		if ((curr->left == nullptr && curr->right != nullptr) || (curr->left != nullptr && curr->right == nullptr))
 		{
-			/*if (curr->left == nullptr && curr->right != nullptr)
-			{
-				(curr->parent)->left = curr->right;
-				delete curr;
-			}
-			else if (curr->left != nullptr && curr->right == nullptr)
-			{
-				(curr->parent)->right = curr->left;
-				delete curr;
-			}*/
 			if (curr->left == nullptr && curr->right != nullptr)
 			{
 				if (curr->parent->left == curr)
@@ -399,6 +390,60 @@ public:
 		Print_Tree_In_0rder(root);
 	}
 
+	void Print1(Node* root)
+	{
+		queue<Node*> qu;
+		qu.push(root);
+		qu.push(nullptr);
+		int depth = Max_Depth(root);
+		while (true)
+		{
+			Node* curr = qu.front();
+			qu.pop();
+			if (curr != nullptr)
+			{
+				if (curr->left != nullptr)
+				{
+					qu.push(curr->left);
+					
+				}
+				if (curr->right != nullptr)
+				{
+					qu.push(curr->right);
+					
+				}
+				for (int a = pow(2, depth - 1); a > 0; a--)
+					cout << "\t";
+				cout << curr->key;
+				for (int a = pow(2, depth - 1); a > 0; a--)
+					cout << "\t";
+			}
+			else
+			{
+				depth--;
+				cout << "\n";
+				if (qu.empty())
+				{
+					break;
+				}
+				qu.push(nullptr);
+			}
+		}
+
+	}
+	
+	int Max_Depth(Node* node)
+	{
+		if (node == NULL)
+			return 0;
+
+		int leftDepth = Max_Depth(node->left);
+		int rightDepth = Max_Depth(node->right);
+
+		return leftDepth > rightDepth ? leftDepth + 1 : rightDepth + 1;
+	}
+	
+	
 };
 
 void old() {
@@ -409,7 +454,7 @@ void old() {
 	t.Add_elem(76);
 	t.Add_elem(21);
 	t.Add_elem(4);
-	t.Add_elem(32);
+	t.Add_elem(25);
 	t.Add_elem(64);
 	t.Add_elem(15);
 	t.Add_elem(52);
@@ -422,22 +467,7 @@ void old() {
 	t.Add_elem(87);
 	t.Add_elem(80);
 	t.Print();
-	t.Delete_node(76);
-	t.Find(50);
-	t.Find(76);
-	t.Add_elem(50);
-	t.Min_Value();
-	t.Max_Value();
-	t.Delete_node(50);
-	t.Delete_node(80);
-	t.Delete_node(64);
-	t.Delete_node(14);
-	t.Delete_node(15);
-	t.Delete_node(2);
-	t.Add_elem(13);
-
-	t.Find(50);
-	t.Print();
+	
 
 }
 
@@ -499,8 +529,23 @@ void test_3() {
 	tree.Add_elem(5);
 	tree.Add_elem(-10);
 	tree.Add_elem(20);
-	tree.Add_elem(19);
-	/*tree.Print();*/
+	tree.Add_elem(76);
+	tree.Add_elem(-5);
+	tree.Add_elem(-12);
+	tree.Add_elem(17);
+	tree.Add_elem(-11);
+	tree.Add_elem(-14);
+	tree.Add_elem(-3);
+	tree.Add_elem(-6);
+	tree.Add_elem(15);
+	tree.Add_elem(18);
+	tree.Add_elem(60);
+	tree.Add_elem(80);
+	
+	
+	tree.Print();
+	
+	
 }
 
 void test_0() {
@@ -517,5 +562,5 @@ void test_0() {
 
 int main()
 {
-	test_2_1();
+	test_3();
 }
