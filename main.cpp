@@ -13,7 +13,7 @@ private:
 	};
 	Node* root;
 
-	Node* FindNode(int key)
+	Node* FindNodePrivate(int key)
 	{
 		Node* curr = root;
 		if (root != nullptr)
@@ -52,6 +52,17 @@ private:
 		}
 		return curr;
 	}
+
+	void Delete_NodePrivate(Node* t)
+	{
+		if (t != nullptr)
+		{
+			Delete_NodePrivate(t->right);
+			Delete_NodePrivate(t->left);
+			delete t;
+		}
+	}
+
 public:
 	BST()
 	{
@@ -59,7 +70,7 @@ public:
 	}
 	~BST()
 	{
-
+		Delete_Tree();
 	}
 
 	void Add_elem(int key)
@@ -164,7 +175,7 @@ public:
 
 	void Delete_node(int key)
 	{
-		Node* curr = FindNode(key);
+		Node* curr = FindNodePrivate(key);
 		//Node without child
 		if (curr->left == nullptr && curr->right == nullptr)
 		{
@@ -194,6 +205,55 @@ public:
 			}
 			return;
 		}
+		//Node with two child
+		if (curr->left != nullptr && curr->right != nullptr)
+		{
+			Node* ch = curr->right;
+			if ((ch->left == nullptr) && (ch->right == nullptr))
+			{
+				curr->key = ch->key;
+				curr->right = nullptr;
+				delete ch;
+			}
+			else
+			{
+				if ((curr->right)->left != nullptr)
+				{
+					Node* lcurr = (curr->right)->left;
+					while (lcurr->left != nullptr)
+					{
+						lcurr->parent = curr->right;
+						lcurr = lcurr->left;
+					}
+					curr->key = lcurr->key;
+					(lcurr->parent)->left = nullptr;
+					delete lcurr;
+					
+				}
+				else
+				{
+					Node* tmp = curr->right;
+					curr->key = tmp->key;
+					curr->right = tmp->right;
+					delete tmp;
+				}
+			}
+			return;
+		}
+	}
+
+	void Delete_Tree()
+	{
+		if (root != nullptr)
+		{
+			Node* t = root;
+			Delete_NodePrivate(root);
+			root = nullptr;
+		}
+		else
+		{
+			cout << "This Tree is empty!\n";
+		}
 	}
 
 };
@@ -218,8 +278,8 @@ int main()
 	t.Add_elem(70);
 	t.Add_elem(87);
 	t.Add_elem(80);
+	t.Delete_node(64);
+	t.Delete_node(76);
 
-	t.Delete_node(2);
-	t.Delete_node(15);
-
+	t.Find(50);
 }
